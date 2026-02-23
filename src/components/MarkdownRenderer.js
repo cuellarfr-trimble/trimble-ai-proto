@@ -89,7 +89,28 @@ function extractSections(markdown) {
     }
   }
 
-  return { sections, lockedSectionEntries, hasLock };
+  const lockedSections = [];
+  if (lockedMarkdown) {
+    const lLines = lockedMarkdown.split('\n');
+    let cur = null;
+    for (const line of lLines) {
+      const numberedH2 = line.match(/^## (\d+)\.\s+(.+)/);
+      if (numberedH2) {
+        if (cur) lockedSections.push(cur);
+        cur = {
+          id: `section-${numberedH2[1]}`,
+          number: numberedH2[1],
+          title: numberedH2[2],
+          lines: [line],
+        };
+      } else if (cur) {
+        cur.lines.push(line);
+      }
+    }
+    if (cur) lockedSections.push(cur);
+  }
+
+  return { sections, lockedSectionEntries, lockedSections, hasLock };
 }
 
 function HeadingRenderer({ level, children }) {
@@ -147,17 +168,17 @@ function LinkRenderer({ href, children }) {
 }
 
 function PreRenderer({ children }) {
-  const codeChild = React.Children.toArray(children).find(
-    (child) => React.isValidElement(child) && child.type === 'code'
+  const child = React.Children.toArray(children).find(
+    (c) => React.isValidElement(c)
   );
-  if (codeChild) {
+  if (child && child.props) {
     return (
-      <CodeBlock className={codeChild.props.className}>
-        {codeChild.props.children}
+      <CodeBlock className={child.props.className}>
+        {child.props.children}
       </CodeBlock>
     );
   }
-  return <pre>{children}</pre>;
+  return <CodeBlock>{children}</CodeBlock>;
 }
 
 function InlineCodeRenderer({ className, children, ...props }) {
@@ -274,9 +295,27 @@ function SectionContent({ markdown }) {
   );
 }
 
-function LockGate() {
+function LockGate({ onUnlock }) {
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState(false);
+  const [unlocking, setUnlocking] = useState(false);
+
+  const handleChange = (e) => {
+    const val = e.target.value;
+    setPassword(val);
+    setError(false);
+
+    if (val === 'Tuesday') {
+      setUnlocking(true);
+      setTimeout(() => onUnlock(), 400);
+    } else if (val.length >= 7) {
+      setError(true);
+      setTimeout(() => setError(false), 600);
+    }
+  };
+
   return (
-    <div className="lock-gate">
+    <div className={`lock-gate${unlocking ? ' unlocking' : ''}`}>
       <div className="lock-gate-blur">
         <div className="lock-gate-blur-line" />
         <div className="lock-gate-blur-line" />
@@ -289,6 +328,14 @@ function LockGate() {
       <div className="lock-gate-overlay">
         <span className="lock-gate-icon" role="img" aria-label="Locked">🔒</span>
         <span className="lock-gate-text">Unlocking Tuesday</span>
+        <input
+          type="password"
+          className={`lock-gate-password${error ? ' error' : ''}`}
+          placeholder="Enter password to preview"
+          value={password}
+          onChange={handleChange}
+          autoComplete="off"
+        />
       </div>
     </div>
   );
@@ -296,8 +343,8 @@ function LockGate() {
 
 export { extractSections };
 
-export default function MarkdownRenderer({ markdown }) {
-  const { sections, hasLock } = extractSections(markdown);
+export default function MarkdownRenderer({ markdown, unlocked, onUnlock }) {
+  const { sections, lockedSections, hasLock } = extractSections(markdown);
 
   return (
     <div className="markdown-body">
@@ -310,7 +357,16 @@ export default function MarkdownRenderer({ markdown }) {
           <SectionContent markdown={section.lines.join('\n')} />
         </div>
       ))}
-      {hasLock && <LockGate />}
+      {hasLock && !unlocked && <LockGate onUnlock={onUnlock} />}
+      {hasLock && unlocked && lockedSections.map((section, i) => (
+        <div
+          key={section.id}
+          className="section-block unlocked-content"
+          style={{ animationDelay: `${(sections.length + i) * 0.08}s` }}
+        >
+          <SectionContent markdown={section.lines.join('\n')} />
+        </div>
+      ))}
     </div>
   );
 }

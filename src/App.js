@@ -4,7 +4,7 @@ import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import MarkdownRenderer, { extractSections } from './components/MarkdownRenderer';
 
-function parseSectionsForSidebar(markdown) {
+function parseSectionsForSidebar(markdown, isUnlocked) {
   const { sections, lockedSectionEntries } = extractSections(markdown);
   const navSections = sections
     .filter((s) => !s.isIntro)
@@ -16,13 +16,13 @@ function parseSectionsForSidebar(markdown) {
       locked: false,
     }));
 
-  for (const locked of lockedSectionEntries) {
+  for (const entry of lockedSectionEntries) {
     navSections.push({
-      id: locked.id,
-      number: locked.number,
-      title: locked.title,
+      id: entry.id,
+      number: entry.number,
+      title: entry.title,
       isPrerequisites: false,
-      locked: true,
+      locked: !isUnlocked,
     });
   }
 
@@ -35,21 +35,30 @@ export default function App() {
   const [activeId, setActiveId] = useState('');
   const [scrollPercent, setScrollPercent] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [unlocked, setUnlocked] = useState(false);
 
   useEffect(() => {
     fetch('/content.md')
       .then((res) => res.text())
       .then((text) => {
         setMarkdown(text);
-        setSections(parseSectionsForSidebar(text));
+        setSections(parseSectionsForSidebar(text, false));
       });
   }, []);
 
   useEffect(() => {
+    if (markdown) {
+      setSections(parseSectionsForSidebar(markdown, unlocked));
+    }
+  }, [unlocked, markdown]);
+
+  useEffect(() => {
     if (!sections.length) return;
 
-    const unlocked = sections.filter((s) => !s.locked);
-    if (!unlocked.length) return;
+    const observable = unlocked
+      ? sections
+      : sections.filter((s) => !s.locked);
+    if (!observable.length) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -68,7 +77,7 @@ export default function App() {
     );
 
     const timer = setTimeout(() => {
-      unlocked.forEach((s) => {
+      observable.forEach((s) => {
         const el = document.getElementById(s.id);
         if (el) observer.observe(el);
       });
@@ -78,7 +87,7 @@ export default function App() {
       clearTimeout(timer);
       observer.disconnect();
     };
-  }, [sections]);
+  }, [sections, unlocked]);
 
   const handleScroll = useCallback(() => {
     const scrollTop = window.scrollY;
@@ -121,7 +130,13 @@ export default function App() {
         />
         <main className="main-content">
           <div className="main-content-inner">
-            {markdown && <MarkdownRenderer markdown={markdown} />}
+            {markdown && (
+              <MarkdownRenderer
+                markdown={markdown}
+                unlocked={unlocked}
+                onUnlock={() => setUnlocked(true)}
+              />
+            )}
           </div>
         </main>
       </div>

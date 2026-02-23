@@ -223,9 +223,22 @@ You'll probably end up using both.
 
 ### Step 4: Create your first project
 
-In Terminal, navigate to where you want your project to live (e.g., your Desktop or a Projects folder), then run:
+First, let's create a dedicated folder to keep all your projects organized. In Terminal, run:
 
 ```
+mkdir projects
+```
+
+Then verify it worked by running:
+
+```
+ls
+```
+
+You should see `projects` listed in the output. Now navigate into it and create your React app:
+
+```
+cd projects
 npx create-react-app my-prototype
 cd my-prototype
 npm run dev
@@ -301,67 +314,145 @@ This review step is Cursor's biggest advantage over Claude Code in Terminal: you
 
 ## 7. Connecting Claude Code to Figma
 
-This is where things get genuinely exciting. By connecting Claude Code to Figma via MCP (Model Context Protocol), you can point Claude at a specific Figma frame and ask it to turn that design into a working React component — with the right layout, colors, typography, and spacing pulled directly from your file.
+This is where things get genuinely exciting. By connecting Claude Code to Figma, you get true bidirectional prototyping — Claude can read your Figma designs and generate code from them, and you can send working prototypes back to Figma as editable layers. 
 
-### What MCP is (briefly)
+You need to complete two authentications to make this work: an API key (so Claude can read your Figma files) and OAuth (so Claude can write back to Figma). Both are required. Do them in this order.
 
-MCP is a protocol that lets AI tools connect to external services. When you set up the Figma MCP, you're giving Claude Code permission to read your Figma files. It can then reference your actual designs when generating code — not just work from your text description.
+### Why you need both
 
-### Step 1: Get your Figma access token
+**API key** → gives Claude read access to your Figma files. This is how Claude understands your designs, layers, colors, and components when generating code.
 
-In Figma: go to your profile icon → Settings → Account → Personal access tokens → Generate new token. Copy it and keep it somewhere safe (like 1Password).
+**OAuth** → authorizes Claude to write back to Figma. This is what powers "Send this to Figma" — pushing a working prototype back as editable Figma layers.
 
-### Step 2: Configure the MCP connection
+Skip either one and bidirectional prototyping won't work.
 
-In your project folder, create a file called `.mcp.json`:
+---
 
-```json
-{
-  "mcpServers": {
-    "figma": {
-      "command": "npx",
-      "args": ["-y", "figma-developer-mcp", "--figma-api-key=YOUR_TOKEN_HERE", "--stdio"]
-    }
-  }
-}
+### Step 1: Generate your Figma API token
+
+In Figma: click your profile icon → Settings → Security → Personal access tokens → Generate new token.
+
+When it asks about permissions, **turn on all read and write access**. This is important — a read-only token will let Claude pull in your designs but won't let it send anything back.
+
+Copy the token and save it somewhere safe like 1Password. You won't be able to see it again after closing the modal.
+
+---
+
+### Step 2: Store the token in your shell
+
+This is the step most people get stuck on. You're going to store your token as an environment variable so Claude Code can access it automatically every time it runs.
+
+In Terminal, open your `.zshrc` file:
+
+```bash
+nano ~/.zshrc
 ```
 
-Replace `YOUR_TOKEN_HERE` with the token you copied from Figma.
+This opens a basic text editor inside Terminal. Use the arrow keys to scroll all the way to the **bottom** of the file. On a completely new line, paste exactly this:
 
-### Step 3: Restart Claude Code
-
-Stop any running Claude Code session (`Ctrl + C`) and restart it in your project folder:
-
-```
-claude
+```bash
+export FIGMA_API_KEY="your-token-here"
 ```
 
-You should see it confirm the Figma MCP is connected.
+Replace `your-token-here` with the token you copied from Figma. Keep the quotes.
 
-### Step 4: Point Claude at a Figma frame
+Save and exit:
+- `Ctrl + O` to save
+- `Enter` to confirm
+- `Ctrl + X` to exit
 
-Copy the link to a specific frame in Figma (right-click the frame → Copy link). Then in Claude Code:
+Now apply the change without restarting Terminal:
 
-> Here's a Figma frame I want to turn into a React component: [paste link]. Build me a pixel-accurate React component from this design. Use CSS modules for styling. Match the typography, spacing, and colors exactly.
+```bash
+source ~/.zshrc
+```
 
-Claude will read the Figma frame and generate a component based on what it sees.
+Verify it worked:
 
-### Setting honest expectations
+```bash
+echo $FIGMA_API_KEY
+```
 
-The output won't be pixel-perfect on the first pass — especially for complex layouts. Think of it as a strong first draft that gets you 70–80% of the way there. You iterate from there, the same way you would with any Claude output.
+You should see your token printed back. If you see nothing, the save didn't work — try again, making sure you're pasting on a new line at the very bottom of the file.
 
-Also: this works best with well-structured Figma files. Auto-layout frames, named layers, and defined styles all help Claude understand your design intent.
+> **Important:** if you accidentally paste your token directly into Terminal as a command (instead of inside nano), Figma will detect it as an exposed key and automatically invalidate it. If that happened, go back to Figma and generate a fresh token before continuing.
 
-### A full workflow example
+---
 
-1. Design a client dashboard card in Figma with proper auto-layout and named layers
-2. Copy the frame link
-3. In Claude Code: *"Turn this Figma frame into a React component — [link]"*
-4. Claude generates the component. Run `npm run dev` to see it in the browser.
-5. Iterate: *"The padding on the inner container is too tight — add 8px more on all sides"*
-6. When you're happy: deploy to Vercel with `npx vercel` and share the URL
+### Step 3: Add the Figma MCP server
 
-Start to shareable prototype: under an hour.
+Now tell Claude Code where to find Figma. Run this in Terminal:
+
+```bash
+# For the current project only
+claude mcp add --transport http figma https://mcp.figma.com/mcp
+
+# Or to make it available across all your projects
+claude mcp add --scope user --transport http figma https://mcp.figma.com/mcp
+```
+
+We recommend the `--scope user` version so you only have to do this once.
+
+---
+
+### Step 4: Restart Claude Code and authenticate via OAuth
+
+Fully quit Claude Code and relaunch it. This is required — the MCP connection initializes at startup, so adding a new server mid-session won't take effect until you restart.
+
+Once relaunched, type:
+
+```
+/mcp
+```
+
+You'll see the Figma server listed. Select it, choose **Authenticate**, and complete the OAuth flow in your browser. When you see:
+
+```
+✓ Authentication successful. Connected to figma
+```
+
+You're connected. This OAuth step is what authorizes the write direction — sending things back to Figma.
+
+---
+
+### Step 5: Verify the connection
+
+Run `/mcp` again. The Figma server should show a green connected status. If it doesn't, restart Claude Code once more and retry.
+
+---
+
+### Step 6: Send your prototype to Figma
+
+Build something in Claude Code, preview it in your browser, then type in Claude Code:
+
+```
+Send this to Figma
+```
+
+A capture toolbar will appear in your browser. You can capture the entire screen or select specific elements. The captured UI appears as editable frames in your Figma workspace — you can then paste them into any existing project, refine them in Figma, and continue iterating.
+
+---
+
+### A full bidirectional workflow
+
+1. Design a component in Figma with auto-layout and named layers
+2. In Claude Code: *"Build a React component from this Figma frame — [paste frame link]"*
+3. Claude reads the design and generates code. Run `npm start` to see it in the browser.
+4. Iterate in Claude Code: *"The padding feels tight — add 8px on all sides and soften the border radius"*
+5. When happy: type "Send this to Figma" — your working prototype lands back in Figma as editable layers
+6. Deploy to Vercel with `npx vercel` and share the URL
+
+Start to shareable prototype, with a round-trip to Figma: under an hour.
+
+---
+
+### Troubleshooting
+
+**The Figma server doesn't appear after adding it** — restart Claude Code completely. The MCP connection only initializes at startup.
+
+**Authentication successful but nothing sends to Figma** — check that your API token has write permissions. Go back to Figma settings and confirm all read/write access is enabled on the token.
+
+**Token was invalidated** — this happens when a token is accidentally pasted as a Terminal command instead of stored in `.zshrc`. Generate a new one in Figma and start from Step 2.
 
 ---
 
@@ -414,20 +505,14 @@ That's fine. You don't need to understand every line. Describe what you want to 
 
 Low pressure. Concrete steps.
 
-**Day 1 — Environment**
-Get your environment running. Install Node.js, install Claude Code or Cursor, create a React project, and see `localhost:3000` in your browser. That's the whole goal.
+**Day 1 — Environment, first component, and Figma connection (all in one hour)**
+Get your environment running, build something real, and connect to Figma — all in a single focused session. Install Node.js, get Claude Code or Cursor running, create a React project, and see `localhost:3000` in your browser. Then ask Claude Code to build one component from scratch using a real Savvy use case — a data table, a summary card, a form. Finally, set up the Figma MCP connection and do one round-trip: take a frame from a current project, generate a component from it, and send something back. Don't aim for perfection. Just get the full loop working.
 
-**Day 2 — First component**
-Ask Claude Code to build one component from scratch. Use a real Savvy use case — a data table, a summary card, a form. Don't aim for perfection. Just get something in the browser.
+**Day 2 — Build**
+Take whatever you built on Day 1 and spend 30 minutes improving it through conversation. Practice describing visual changes in words — spacing, hierarchy, color, interaction. This is the core skill. The more precisely you can describe what you want, the faster Claude moves.
 
-**Day 3 — Figma connection**
-Set up the Figma MCP. Take one frame from a current project and ask Claude to turn it into a component. Compare what it generates with your design.
-
-**Day 4 — Iterate**
-Take whatever you built on Day 2 or 3 and spend 30 minutes improving it through conversation. Practice describing visual changes in words.
-
-**Day 5 — Share**
-Deploy your prototype to Vercel (`npx vercel` — it'll walk you through setup) and share the URL in #design. You built a real, shareable web app. That's worth celebrating.
+**Day 3 — Deploy**
+Deploy your prototype to Vercel (`npx vercel` — it'll walk you through setup) and share the URL in #team-design. You built a real, shareable web app. That's worth celebrating.
 
 ---
 
@@ -485,6 +570,6 @@ Over time you'll develop an intuition for when something warrants Opus versus wh
 
 ---
 
-*Questions? Drop them in #design or tag Monica.*
+*Questions? Drop them in #team-design or tag Monica.*
 
 <!-- LOCKED_CONTENT_END -->

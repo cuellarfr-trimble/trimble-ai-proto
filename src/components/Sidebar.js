@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React from 'react';
 
 function ChecklistIcon() {
   return (
@@ -9,16 +9,7 @@ function ChecklistIcon() {
   );
 }
 
-export default function Sidebar({ sections, activeId, isOpen, onClose, scrollPercent }) {
-  const navRef = useRef(null);
-  const [trackHeight, setTrackHeight] = useState(0);
-
-  useEffect(() => {
-    if (navRef.current) {
-      setTrackHeight(navRef.current.offsetHeight);
-    }
-  }, [sections]);
-
+export default function Sidebar({ sections, activeId, isOpen, onClose }) {
   const handleClick = (e, section) => {
     e.preventDefault();
     if (section.locked) return;
@@ -29,13 +20,6 @@ export default function Sidebar({ sections, activeId, isOpen, onClose, scrollPer
     if (onClose) onClose();
   };
 
-  const activeIndex = sections.findIndex((s) => s.id === activeId);
-  const activeFraction = sections.length > 1
-    ? Math.max(0, activeIndex) / (sections.length - 1)
-    : 0;
-  const dotTop = activeFraction * Math.max(0, trackHeight - 10);
-  const fillHeight = (scrollPercent / 100) * trackHeight;
-
   return (
     <>
       <div
@@ -44,7 +28,7 @@ export default function Sidebar({ sections, activeId, isOpen, onClose, scrollPer
       />
       <nav className={`sidebar${isOpen ? ' open' : ''}`}>
         <div className="sidebar-label">Design Team</div>
-        <ul className="sidebar-nav" ref={navRef}>
+        <ul className="sidebar-nav">
           {sections.map((section) => {
             const isActive = activeId === section.id;
             let cls = 'sidebar-nav-item';
@@ -82,21 +66,6 @@ export default function Sidebar({ sections, activeId, isOpen, onClose, scrollPer
             );
           })}
         </ul>
-
-        <div className="sidebar-progress">
-          <div className="sidebar-progress-track" style={{ height: trackHeight || 0 }}>
-            <div className="sidebar-progress-fill" style={{ height: fillHeight }} />
-            {activeIndex >= 0 && (
-              <div
-                className={`sidebar-progress-dot${activeIndex >= 0 ? ' pulsing' : ''}`}
-                style={{ top: dotTop }}
-              />
-            )}
-          </div>
-          <div className="sidebar-progress-label">
-            {Math.round(scrollPercent)}% through
-          </div>
-        </div>
       </nav>
     </>
   );
