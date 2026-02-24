@@ -4,9 +4,9 @@ import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import MarkdownRenderer, { extractSections } from './components/MarkdownRenderer';
 
-function parseSectionsForSidebar(markdown, isUnlocked) {
-  const { sections, lockedSectionEntries } = extractSections(markdown);
-  const navSections = sections
+function parseSectionsForSidebar(markdown) {
+  const { sections } = extractSections(markdown);
+  return sections
     .filter((s) => !s.isIntro)
     .map((s) => ({
       id: s.id,
@@ -15,18 +15,6 @@ function parseSectionsForSidebar(markdown, isUnlocked) {
       isPrerequisites: !!s.isPrerequisites,
       locked: false,
     }));
-
-  for (const entry of lockedSectionEntries) {
-    navSections.push({
-      id: entry.id,
-      number: entry.number,
-      title: entry.title,
-      isPrerequisites: false,
-      locked: !isUnlocked,
-    });
-  }
-
-  return navSections;
 }
 
 export default function App() {
@@ -35,30 +23,18 @@ export default function App() {
   const [activeId, setActiveId] = useState('');
   const [scrollPercent, setScrollPercent] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [unlocked, setUnlocked] = useState(false);
 
   useEffect(() => {
     fetch('/content.md')
       .then((res) => res.text())
       .then((text) => {
         setMarkdown(text);
-        setSections(parseSectionsForSidebar(text, false));
+        setSections(parseSectionsForSidebar(text));
       });
   }, []);
 
   useEffect(() => {
-    if (markdown) {
-      setSections(parseSectionsForSidebar(markdown, unlocked));
-    }
-  }, [unlocked, markdown]);
-
-  useEffect(() => {
     if (!sections.length) return;
-
-    const observable = unlocked
-      ? sections
-      : sections.filter((s) => !s.locked);
-    if (!observable.length) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -77,7 +53,7 @@ export default function App() {
     );
 
     const timer = setTimeout(() => {
-      observable.forEach((s) => {
+      sections.forEach((s) => {
         const el = document.getElementById(s.id);
         if (el) observer.observe(el);
       });
@@ -87,7 +63,7 @@ export default function App() {
       clearTimeout(timer);
       observer.disconnect();
     };
-  }, [sections, unlocked]);
+  }, [sections]);
 
   const handleScroll = useCallback(() => {
     const scrollTop = window.scrollY;
@@ -133,8 +109,6 @@ export default function App() {
             {markdown && (
               <MarkdownRenderer
                 markdown={markdown}
-                unlocked={unlocked}
-                onUnlock={() => setUnlocked(true)}
               />
             )}
           </div>

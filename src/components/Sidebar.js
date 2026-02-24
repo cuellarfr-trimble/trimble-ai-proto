@@ -12,7 +12,6 @@ function ChecklistIcon() {
 export default function Sidebar({ sections, activeId, isOpen, onClose }) {
   const handleClick = (e, section) => {
     e.preventDefault();
-    if (section.locked) return;
     const el = document.getElementById(section.id);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
@@ -31,17 +30,14 @@ export default function Sidebar({ sections, activeId, isOpen, onClose }) {
         <ul className="sidebar-nav">
           {sections.map((section) => {
             const isActive = activeId === section.id;
-            let cls = 'sidebar-nav-item';
-            if (isActive && !section.locked) cls += ' active';
-            if (section.locked) cls += ' locked';
+            const cls = isActive ? 'sidebar-nav-item active' : 'sidebar-nav-item';
 
             return (
               <li key={section.id}>
                 <a
-                  href={`#${section.locked ? '' : section.id}`}
+                  href={`#${section.id}`}
                   className={cls}
                   onClick={(e) => handleClick(e, section)}
-                  tabIndex={section.locked ? -1 : 0}
                 >
                   {section.isPrerequisites ? (
                     <span className="sidebar-nav-icon">
@@ -53,9 +49,6 @@ export default function Sidebar({ sections, activeId, isOpen, onClose }) {
                   <span className="sidebar-nav-item-content">
                     <span className="sidebar-nav-item-row">
                       <span className="sidebar-nav-text">{section.title}</span>
-                      {section.locked && (
-                        <span className="sidebar-lock-icon" aria-label="Locked">🔒</span>
-                      )}
                     </span>
                     {section.isPrerequisites && (
                       <span className="sidebar-start-label">Start here →</span>
