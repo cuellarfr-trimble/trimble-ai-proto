@@ -4,31 +4,7 @@ import remarkGfm from 'remark-gfm';
 import CodeBlock from './CodeBlock';
 
 function extractSections(markdown) {
-  const lockStartIdx = markdown.indexOf('<!-- LOCKED_CONTENT_START -->');
-  const lockEndIdx = markdown.indexOf('<!-- LOCKED_CONTENT_END -->');
-  const hasLock = lockStartIdx !== -1 && lockEndIdx !== -1;
-
-  const cleanedMarkdown = hasLock
-    ? markdown.slice(0, lockStartIdx)
-    : markdown;
-
-  let lockedMarkdown = '';
-  if (hasLock) {
-    lockedMarkdown = markdown.slice(lockStartIdx + '<!-- LOCKED_CONTENT_START -->'.length, lockEndIdx).trim();
-  }
-
-  const lockedSectionIds = new Set();
-  if (lockedMarkdown) {
-    const lockedLines = lockedMarkdown.split('\n');
-    for (const line of lockedLines) {
-      const numberedH2 = line.match(/^## (\d+)\.\s+(.+)/);
-      if (numberedH2) {
-        lockedSectionIds.add(`section-${numberedH2[1]}`);
-      }
-    }
-  }
-
-  const lines = cleanedMarkdown.split('\n');
+  const lines = markdown.split('\n');
   const sections = [];
   let current = null;
 
@@ -72,45 +48,7 @@ function extractSections(markdown) {
   }
   if (current) sections.push(current);
 
-  const lockedSectionEntries = [];
-  if (lockedMarkdown) {
-    const lockedLines = lockedMarkdown.split('\n');
-    for (const line of lockedLines) {
-      const numberedH2 = line.match(/^## (\d+)\.\s+(.+)/);
-      if (numberedH2) {
-        lockedSectionEntries.push({
-          id: `section-${numberedH2[1]}`,
-          number: numberedH2[1],
-          title: numberedH2[2],
-          locked: true,
-          lines: [],
-        });
-      }
-    }
-  }
-
-  const lockedSections = [];
-  if (lockedMarkdown) {
-    const lLines = lockedMarkdown.split('\n');
-    let cur = null;
-    for (const line of lLines) {
-      const numberedH2 = line.match(/^## (\d+)\.\s+(.+)/);
-      if (numberedH2) {
-        if (cur) lockedSections.push(cur);
-        cur = {
-          id: `section-${numberedH2[1]}`,
-          number: numberedH2[1],
-          title: numberedH2[2],
-          lines: [line],
-        };
-      } else if (cur) {
-        cur.lines.push(line);
-      }
-    }
-    if (cur) lockedSections.push(cur);
-  }
-
-  return { sections, lockedSectionEntries, lockedSections, hasLock };
+  return { sections };
 }
 
 function HeadingRenderer({ level, children }) {
@@ -295,56 +233,10 @@ function SectionContent({ markdown }) {
   );
 }
 
-function LockGate({ onUnlock }) {
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(false);
-  const [unlocking, setUnlocking] = useState(false);
-
-  const handleChange = (e) => {
-    const val = e.target.value;
-    setPassword(val);
-    setError(false);
-
-    if (val === 'Tuesday') {
-      setUnlocking(true);
-      setTimeout(() => onUnlock(), 400);
-    } else if (val.length >= 7) {
-      setError(true);
-      setTimeout(() => setError(false), 600);
-    }
-  };
-
-  return (
-    <div className={`lock-gate${unlocking ? ' unlocking' : ''}`}>
-      <div className="lock-gate-blur">
-        <div className="lock-gate-blur-line" />
-        <div className="lock-gate-blur-line" />
-        <div className="lock-gate-blur-line" />
-        <div className="lock-gate-blur-line" />
-        <div className="lock-gate-blur-line" />
-        <div className="lock-gate-blur-line" />
-        <div className="lock-gate-blur-line" />
-      </div>
-      <div className="lock-gate-overlay">
-        <span className="lock-gate-icon" role="img" aria-label="Locked">🔒</span>
-        <span className="lock-gate-text">Unlocking Tuesday</span>
-        <input
-          type="password"
-          className={`lock-gate-password${error ? ' error' : ''}`}
-          placeholder="Enter password to preview"
-          value={password}
-          onChange={handleChange}
-          autoComplete="off"
-        />
-      </div>
-    </div>
-  );
-}
-
 export { extractSections };
 
-export default function MarkdownRenderer({ markdown, unlocked, onUnlock }) {
-  const { sections, lockedSections, hasLock } = extractSections(markdown);
+export default function MarkdownRenderer({ markdown }) {
+  const { sections } = extractSections(markdown);
 
   return (
     <div className="markdown-body">
@@ -353,16 +245,6 @@ export default function MarkdownRenderer({ markdown, unlocked, onUnlock }) {
           key={section.id}
           className={section.isIntro ? 'intro-block' : 'section-block'}
           style={{ animationDelay: `${i * 0.08}s` }}
-        >
-          <SectionContent markdown={section.lines.join('\n')} />
-        </div>
-      ))}
-      {hasLock && !unlocked && <LockGate onUnlock={onUnlock} />}
-      {hasLock && unlocked && lockedSections.map((section, i) => (
-        <div
-          key={section.id}
-          className="section-block unlocked-content"
-          style={{ animationDelay: `${(sections.length + i) * 0.08}s` }}
         >
           <SectionContent markdown={section.lines.join('\n')} />
         </div>

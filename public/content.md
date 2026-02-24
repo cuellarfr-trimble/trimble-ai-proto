@@ -1,6 +1,5 @@
 # AI Prototyping for Designers
-**A practical guide to building real things with Claude Code + Cursor**
-*From the Savvy Design Team*
+**Savvy Wealth's practical guide to building real things with Claude Code + Cursor for designers**
 
 ---
 
@@ -94,14 +93,6 @@ Once these are checked off, you're ready. Start with section 1.
 
 ---
 
-✨ **We'll cover the rest on Tuesday!**
-
-The remaining sections of this guide will be unlocked in our Tuesday session together. Between now and then, your only job is to get through the checklist above. See you then.
-
----
-
-<!-- LOCKED_CONTENT_START -->
-
 ## 1. Why we're going deeper than Figma
 
 Figma is still home base. This isn't about replacing it.
@@ -154,7 +145,7 @@ On Mac: `Cmd + Space` → type "Terminal" → Enter
 | `cd` | Navigate into a folder | `cd Desktop` |
 | `cd ..` | Go up one level | `cd ..` |
 | `npm install` | Installs a project's dependencies | `npm install` |
-| `npm start` | Starts your local development server because you're using react (if building a web app, you would use npm run dev) | `npm start` |
+| `npm run dev` | Starts your local development server | `npm run dev` |
 
 **To stop a running server:** `Ctrl + C`
 
@@ -162,28 +153,41 @@ On Mac: `Cmd + Space` → type "Terminal" → Enter
 
 Errors look alarming. They're usually not. When something goes wrong in Terminal, read the last 2–3 lines first — that's almost always where the actual problem is described. Copy the error, paste it into Claude or Google. Engineers do this constantly.
 
-### Try it now
-
-Open Terminal and do this:
-1. Type `pwd` and hit Enter. You'll see your current location.
-2. Type `cd Desktop` and hit Enter. You've moved to your Desktop.
-3. Type `ls` and hit Enter. You'll see everything on your Desktop.
-4. Type `mkdir my-first-prototype` and hit Enter. You just created a folder.
-5. Type `cd my-first-prototype` and hit Enter. You're inside it.
-
-You just used Terminal. That's the hardest part — the first time.
-
 ---
 
 ## 4. Setting up your environment
 
 Do this once. You won't have to do it again.
 
-### Step 1: Install Node.js
+### Step 1: Install Homebrew
+
+Homebrew is a package manager for Mac — think of it as an app store you control from Terminal. It's the most reliable way to install developer tools like Node.js, and once it's set up, future installs are a single command.
+
+In Terminal, paste this and hit Enter:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+This will take 2–3 minutes. It may ask for your Mac password — type it and hit Enter (you won't see the characters as you type, that's normal). Wait for it to finish before doing anything else.
+
+When it's done, verify it worked:
+
+```
+brew --version
+```
+
+You should see something like `Homebrew 4.2.0`. If you do, you're good.
+
+### Step 2: Install Node.js via Homebrew
 
 Node.js is what lets your computer run JavaScript outside of a browser. You need it to run React projects locally.
 
-Go to [nodejs.org](https://nodejs.org) and download the LTS version. Install it like any other Mac app. When it's done, verify it worked:
+```
+brew install node
+```
+
+This takes about a minute. When it's done, verify:
 
 ```
 node --version
@@ -191,7 +195,7 @@ node --version
 
 You should see something like `v20.11.0`. If you see a version number, you're good.
 
-### Step 2: Install Claude Code
+### Step 3: Install Claude Code
 
 Claude Code is Anthropic's AI coding tool that runs directly in Terminal. It can read your files, write code, run commands, and iterate — all through a conversation interface.
 
@@ -207,7 +211,7 @@ claude
 
 You'll be prompted to log in with your Anthropic account. After that, you're in.
 
-### Step 3: Or install Cursor
+### Step 4: Or install Cursor
 
 Cursor is a code editor (like VS Code) with AI built in. It gives you a visual interface alongside the AI — you can see your files, preview changes, and chat with the AI in a sidebar panel.
 
@@ -221,7 +225,7 @@ Use **Cursor** when you want more visual control, want to see and navigate your 
 
 You'll probably end up using both.
 
-### Step 4: Create your first project
+### Step 5: Create your first project
 
 First, let's create a dedicated folder to keep all your projects organized. In Terminal, run:
 
@@ -572,4 +576,3 @@ Over time you'll develop an intuition for when something warrants Opus versus wh
 
 *Questions? Drop them in #team-design or tag Monica.*
 
-<!-- LOCKED_CONTENT_END -->
