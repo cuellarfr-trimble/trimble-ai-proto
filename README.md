@@ -1,70 +1,71 @@
-# Getting Started with Create React App
+# AI Prototyping Guide for Designers
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A practical, interactive guide for designers learning to build real prototypes with Claude Code and Cursor. Built by the design team at [Savvy Wealth](https://www.savvywealth.com).
 
-## Available Scripts
+**[View the live guide →](https://savvy-s-ai-prototyping-guide.vercel.app/)**
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## What this is
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Most AI prototyping guides stop at Figma plugins and prompt tips. This one goes further — it's designed to get designers comfortable with Terminal, local development environments, and AI-assisted code so they can build and ship working prototypes without waiting on engineering.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+It covers:
+- Getting comfortable with Terminal
+- Setting up a local dev environment with Homebrew and Node.js
+- Building prototypes with Claude Code and Cursor
+- Connecting Claude Code to Figma for bidirectional prototyping
+- Deploying to Vercel and sharing a real URL
+- Using AI tools efficiently — model selection and credit management
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Who it's for
 
-### `npm run build`
+Designers and PMs who want to go beyond Figma and build things that feel real. No coding background required — the guide assumes you're starting from zero.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Running it locally
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+git clone https://github.com/monicycle/Savvy-s-AI-Prototyping-Guide.git
+cd Savvy-s-AI-Prototyping-Guide
+npm install
+npm start
+```
 
-### `npm run eject`
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Updating the content
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+All guide content lives in one file:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```
+public/content.md
+```
 
-## Learn More
+Edit that file and refresh your browser — no code changes needed. The app fetches and renders the markdown at runtime.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Stack
 
-### Code Splitting
+- React (Create React App)
+- `react-markdown` + `remark-gfm` for markdown rendering
+- `react-syntax-highlighter` for code blocks
+- Deployed on Vercel
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+## About
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Built by Monica, Design Manager at Savvy Wealth, as part of an initiative to get the design team building real, shareable prototypes using AI tools. The guide itself was built using the exact workflow it teaches — Claude Code and Cursor.
 
-### Making a Progressive Web App
+Feel free to fork it and adapt it for your own team.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+---
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+*Questions or suggestions? Open an issue or reach out on [LinkedIn](https://www.linkedin.com/in/monicafinc/).*
