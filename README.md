@@ -2,7 +2,7 @@
 
 A practical, interactive guide for designers learning to build real prototypes with Claude Code and Cursor. Built by the design team at [Trimble](https://www.trimble.com).
 
-**[View the live guide →]()**
+**[View the live guide →](https://trimble-ai-proto.vercel.app/)**
 
 ---
 
