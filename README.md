@@ -29,8 +29,8 @@ Designers and PMs who want to go beyond Figma and build things that feel real. N
 ## Running it locally
 
 ```bash
-git clone https://github.com/monicycle/Trimble-s-AI-Prototyping-Guide.git
-cd Trimble-s-AI-Prototyping-Guide
+git clone https://github.com/cuellarfr-trimble/trimble-ai-proto.git
+cd trimble-ai-proto
 npm install
 npm start
 ```
@@ -62,10 +62,7 @@ Edit that file and refresh your browser — no code changes needed. The app fetc
 
 ## About
 
-Built by Monica, Design Manager at Trimble, as part of an initiative to get the design team building real, shareable prototypes using AI tools. The guide itself was built using the exact workflow it teaches — Claude Code and Cursor.
-
-Feel free to fork it and adapt it for your own team.
+This is a fork of a guide built originall by by Monica, Design Manager at Savvy, as part of an initiative to get the design team building real, shareable prototypes using AI tools. 
 
 ---
 
-*Questions or suggestions? Open an issue or reach out on [LinkedIn](https://www.linkedin.com/in/monicafinc/).*
