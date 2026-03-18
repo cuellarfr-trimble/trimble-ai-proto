@@ -3,9 +3,9 @@ import React from 'react';
 export default function Header() {
   return (
     <header className="app-header">
-      <span className="header-title">AI Prototyping Guide</span>
+      <span className="header-title">Trimble's AI Prototyping Guide</span>
       <div className="header-right">
-        <span className="header-team">Last updated by the Trimble Design team on Feb 23, 9:18 AM EST</span>
+        <span className="header-team">Last updated on Mar 17 2026</span>
       </div>
     </header>
   );
