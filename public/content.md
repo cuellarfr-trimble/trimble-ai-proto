@@ -13,6 +13,8 @@ Some of these tools require a paid seat or company account. Before doing anythin
 
 - **Cursor** — AI-powered code editor
 
+You will receive a confirmation email once your manager approves the request. 
+
 ---
 
 ### Step 2: Create a GitHub account
@@ -29,9 +31,10 @@ You don't need to deeply understand GitHub to use it in this workflow. There are
 
 - **Clone** — download a repo to your computer so you can work on it
 - **Commit** — save a snapshot of your changes with a short description
+- **Pull** — download the latest changes from Github to your computer
 - **Push** — send your local changes up to GitHub
 
-Cursor can do all three of these for you through conversation. You won't need to memorize commands.
+Cursor can do all four of these for you through conversation. You won't need to memorize commands.
 
 **Create your account:**
 1. Go to [github.com](https://github.com)
@@ -57,7 +60,7 @@ Vercel is free for personal projects and prototyping. You won't need a paid plan
 1. Go to [vercel.com](https://vercel.com)
 2. Click "Sign Up" and choose **Continue with GitHub** — this links your accounts automatically
 3. Authorize Vercel to access your GitHub repositories
-4. You're in. No project setup needed yet — you'll do that in Day 5.
+4. You're in. No project setup needed yet — you'll do that later.
 
 ---
 
@@ -70,7 +73,7 @@ Cursor is a code editor — the app you'll use to read and write code — with A
 **Install and create your account:**
 1. Go to [cursor.com](https://cursor.com)
 2. Download and install the Mac app
-3. Open Cursor and sign up for an account (the Hobby plan is free and sufficient to start)
+3. Open Cursor and use your email to sign in. This will redirect you to Okta for authentication.
 4. You'll be asked to connect your AI — you can skip this for now, you'll configure it in section 6
 
 ---
@@ -79,7 +82,7 @@ Cursor is a code editor — the app you'll use to read and write code — with A
 
 Before moving on, confirm you have all of these:
 
-- [ ] Received company access to Claude, Claude Code, Cursor, and Vercel from Monica
+- [ ] Received company access to Cursor
 - [ ] GitHub account created at github.com with your Trimble email
 - [ ] Vercel account created at vercel.com, connected to GitHub
 - [ ] Cursor downloaded, installed, and account created
@@ -94,7 +97,7 @@ Figma is still home base. This isn't about replacing it.
 
 But Figma prototypes have a ceiling. They can't show real data loading in from an API. They can't demonstrate what happens when a client has 47 accounts, or how a table behaves when a column is empty, or what a form actually feels like to tab through. And every time we hand a clickable prototype to an engineer, something gets lost in translation.
 
-AI-assisted code prototypes close that gap. With Claude Code or Cursor, you can go from idea to a working, shareable URL in under an hour — no engineering sprint required. The output isn't production code, but it's real enough to test, share with stakeholders, and hand off with confidence.
+AI-assisted code prototypes close that gap. With Cursor, you can go from idea to a working, shareable URL in under an hour — no engineering sprint required. The output isn't production code, but it's real enough to test, share with stakeholders, and hand off with confidence.
 
 There's a learning curve. We're not going to pretend otherwise. But you don't need to become an engineer. You need to get comfortable with a few new tools and a new mental model — and that's exactly what this guide is for.
 
@@ -146,7 +149,7 @@ On Mac: `Cmd + Space` → type "Terminal" → Enter
 
 ### How to read an error message
 
-Errors look alarming. They're usually not. When something goes wrong in Terminal, read the last 2–3 lines first — that's almost always where the actual problem is described. Copy the error, paste it into Claude or Google. Engineers do this constantly.
+Errors look alarming. They're usually not. When something goes wrong in Terminal, read the last 2–3 lines first — that's almost always where the actual problem is described. Copy the error, paste it into Gemini. Engineers do this constantly.
 
 ---
 
@@ -172,7 +175,7 @@ When it's done, verify it worked:
 brew --version
 ```
 
-You should see something like `Homebrew 4.2.0`. If you do, you're good.
+You should see something like `Homebrew 5.1.0`. If you do, you're good.
 
 ### Step 2: Install Node.js via Homebrew
 
@@ -190,35 +193,13 @@ node --version
 
 You should see something like `v20.11.0`. If you see a version number, you're good.
 
-### Step 3: Install Claude Code
 
-Claude Code is Anthropic's AI coding tool that runs directly in Terminal. It can read your files, write code, run commands, and iterate — all through a conversation interface.
-
-```
-npm install -g @anthropic-ai/claude-code
-```
-
-Once installed, navigate to a project folder and run:
-
-```
-claude
-```
-
-You'll be prompted to log in with your Anthropic account. After that, you're in.
-
-### Step 4: Or install Cursor
+### Step 3 Install Cursor
 
 Cursor is a code editor (like VS Code) with AI built in. It gives you a visual interface alongside the AI — you can see your files, preview changes, and chat with the AI in a sidebar panel.
 
 Download from [cursor.com](https://cursor.com). Install like any Mac app. Open a project folder by dragging it onto the Cursor icon.
 
-**Cursor vs. Claude Code: which should you use?**
-
-Use **Claude Code** when you want to move fast and stay in Terminal — great for generating a full prototype from scratch.
-
-Use **Cursor** when you want more visual control, want to see and navigate your files, or are making targeted edits to an existing prototype.
-
-You'll probably end up using both.
 
 ### Step 5: Create your first project
 
@@ -247,7 +228,7 @@ Open your browser and go to `localhost:3000`. You should see the default React w
 
 ---
 
-## 5. Building your first prototype with Claude Code
+## 5. Building your first prototype with Cursor
 
 Let's build something real. We'll use a Trimble-flavored example: a client portfolio summary card.
 
