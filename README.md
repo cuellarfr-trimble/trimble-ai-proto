@@ -1,6 +1,6 @@
 # AI Prototyping Guide for Designers
 
-A practical, interactive guide for designers learning to build real prototypes with Claude Code and Cursor. Built by the design team at [Trimble](https://www.trimble.com).
+A practical, interactive guide for designers learning to build real prototypes with Cursor. Built by the design team at [Trimble](https://www.trimble.com).
 
 **[View the live guide →](https://trimble-ai-proto.vercel.app/)**
 
@@ -13,8 +13,9 @@ Most AI prototyping guides stop at Figma plugins and prompt tips. This one goes 
 It covers:
 - Getting comfortable with Terminal
 - Setting up a local dev environment with Homebrew and Node.js
-- Building prototypes with Claude Code and Cursor
-- Connecting Claude Code to Figma for bidirectional prototyping
+- Building prototypes with Cursor
+- Connecting Cursor to Figma
+- Connecting Azure DevOps to Figma
 - Deploying to Vercel and sharing a real URL
 - Using AI tools efficiently — model selection and credit management
 

@@ -9,14 +9,10 @@ This section isn't part of the learning curve. It's just logistics. Get these so
 
 ### Step 1: Request company access
 
-Some of these tools require a paid seat or company account. Before doing anything else, reach out to Monica and ask for access to:
+Some of these tools require a paid seat or company account. Before doing anything else, reach out to the Cloud team and ask for access to:
 
-- **Claude** (claude.ai) — Anthropic's AI assistant, used throughout this guide
-- **Claude Code** — Anthropic's AI coding tool that runs in Terminal
 - **Cursor** — AI-powered code editor
-- **Vercel** — deployment platform for sharing your prototypes
-
-Ping Monica in Slack and she'll get you sorted. Don't skip this step — you'll need it before Day 1.
+<!-- - **Vercel** — deployment platform for sharing your prototypes -->
 
 ---
 
