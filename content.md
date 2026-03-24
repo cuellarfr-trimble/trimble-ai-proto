@@ -1,5 +1,5 @@
-# Lista Payroll Playbook for Designers
-**A practical guide to building real things with Cursor for designers**
+# Lista Payroll Design Playbook
+**A practical guide to building real things with Cursor**
 
 ---
 
