@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/lista-payroll-playbook/static/css/main.4295878c.css",
+    "main.js": "/lista-payroll-playbook/static/js/main.edfdde62.js",
+    "static/js/453.e888357f.chunk.js": "/lista-payroll-playbook/static/js/453.e888357f.chunk.js",
+    "index.html": "/lista-payroll-playbook/index.html",
+    "main.4295878c.css.map": "/lista-payroll-playbook/static/css/main.4295878c.css.map",
+    "main.edfdde62.js.map": "/lista-payroll-playbook/static/js/main.edfdde62.js.map",
+    "453.e888357f.chunk.js.map": "/lista-payroll-playbook/static/js/453.e888357f.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4295878c.css",
+    "static/js/main.edfdde62.js"
+  ]
+}
