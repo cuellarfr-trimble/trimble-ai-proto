@@ -1,4 +1,4 @@
-# AI Prototyping Guide for Designers
+# A AI Guide for Designers working on Lista Payroll
 
 A practical, interactive guide for designers learning to build real prototypes with Cursor. Built by the design team at [Trimble](https://www.trimble.com).
 
