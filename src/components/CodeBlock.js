@@ -1,10 +1,10 @@
-import React, { useState, useCallback, useSyncExternalStore } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import js from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript';
 import json from 'react-syntax-highlighter/dist/esm/languages/hljs/json';
 import css from 'react-syntax-highlighter/dist/esm/languages/hljs/css';
 import bash from 'react-syntax-highlighter/dist/esm/languages/hljs/bash';
-import { a11yLight, a11yDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 SyntaxHighlighter.registerLanguage('javascript', js);
 SyntaxHighlighter.registerLanguage('js', js);
@@ -13,35 +13,19 @@ SyntaxHighlighter.registerLanguage('css', css);
 SyntaxHighlighter.registerLanguage('bash', bash);
 SyntaxHighlighter.registerLanguage('shell', bash);
 
-const darkQuery = typeof window !== 'undefined'
-  ? window.matchMedia('(prefers-color-scheme: dark)')
-  : null;
-
-function subscribeToDarkMode(callback) {
-  darkQuery?.addEventListener('change', callback);
-  return () => darkQuery?.removeEventListener('change', callback);
-}
-
-function getIsDark() {
-  return darkQuery?.matches ?? false;
-}
-
-function useDarkMode() {
-  return useSyncExternalStore(subscribeToDarkMode, getIsDark);
-}
+const monoStack = "'SF Mono', 'Fira Code', 'Consolas', 'Liberation Mono', monospace";
 
 const customStyle = {
   background: 'transparent',
-  padding: '20px 24px',
+  padding: '24px',
   margin: 0,
   fontSize: '0.8125rem',
-  lineHeight: '1.6',
-  fontFamily: "'IBM Plex Mono', 'Courier New', monospace",
+  lineHeight: '1.65',
+  fontFamily: monoStack,
 };
 
 export default function CodeBlock({ className, children }) {
   const [copied, setCopied] = useState(false);
-  const isDark = useDarkMode();
   const code = String(children).replace(/\n$/, '');
   const match = /language-(\w+)/.exec(className || '');
   const language = match ? match[1] : '';
@@ -61,16 +45,16 @@ export default function CodeBlock({ className, children }) {
           className={`code-block-copy${copied ? ' copied' : ''}`}
           onClick={handleCopy}
         >
-          {copied ? 'Copied ✓' : 'Copy'}
+          {copied ? 'Copied' : 'Copy'}
         </button>
       </div>
       <SyntaxHighlighter
         language={language || 'plaintext'}
-        style={isDark ? a11yDark : a11yLight}
+        style={a11yDark}
         customStyle={customStyle}
         codeTagProps={{
           style: {
-            fontFamily: "'IBM Plex Mono', 'Courier New', monospace",
+            fontFamily: monoStack,
             fontSize: '0.8125rem',
           },
         }}
