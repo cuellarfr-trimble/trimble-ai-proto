@@ -447,7 +447,7 @@
   right: 0;
   height: 56px;
   background: var(--color-bg);
-  border-bottom: var(--rule-heavy);
+  border-bottom: var(--rule-light);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -510,8 +510,6 @@
   color: var(--color-text-secondary);
   padding: 0 24px;
   margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: var(--rule-heavy);
   flex-shrink: 0;
 }
 

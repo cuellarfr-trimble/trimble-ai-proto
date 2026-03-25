@@ -26,7 +26,7 @@ export default function Sidebar({ sections, activeId, isOpen, onClose }) {
         onClick={onClose}
       />
       <nav className={`sidebar${isOpen ? ' open' : ''}`}>
-        <div className="sidebar-label">Design Team</div>
+        {/* <div className="sidebar-label">Design Team</div> */}
         <ul className="sidebar-nav">
           {sections.map((section) => {
             const isActive = activeId === section.id;
